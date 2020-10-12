@@ -30,11 +30,11 @@ function renderCafe(doc){
 
 // getting data
 //db.collection('cafes').where('city', '==', 'Santa Cruz').get().then((snapshot) => {
-db.collection('cafes').orderBy('city').get().then((snapshot) => {
-    snapshot.docs.forEach(doc => {
-        renderCafe(doc);
-    })
-});
+// db.collection('cafes').orderBy('city').get().then((snapshot) => {
+//     snapshot.docs.forEach(doc => {
+//         renderCafe(doc);
+//     })
+// });
 
 // saving data
 form.addEventListener('submit', (e) => {
@@ -47,3 +47,18 @@ form.addEventListener('submit', (e) => {
     form.city.value = '';
 });
 
+// real time listener
+db.collection('cafes').orderBy('city').onSnapshot(snapshot => {
+    let changes = snapshot.docChanges();
+    changes.forEach(change => {
+        if(change.type == 'added'){
+            renderCafe(change.doc);
+        } else if (change.type == 'removed'){
+            let li = cafeList.querySelector('[data-id=' + change.doc.id + ']');
+            cafeList.removeChild(li);
+        }
+    })
+})
+
+// update
+// db.collection('cafes').doc('2avWf2zf8pF81K75ji9F').update({ city: 'Santa Cruz' })
