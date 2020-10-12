@@ -29,7 +29,8 @@ function renderCafe(doc){
 }
 
 // getting data
-db.collection('cafes').get().then((snapshot) => {
+//db.collection('cafes').where('city', '==', 'Santa Cruz').get().then((snapshot) => {
+db.collection('cafes').orderBy('city').get().then((snapshot) => {
     snapshot.docs.forEach(doc => {
         renderCafe(doc);
     })
